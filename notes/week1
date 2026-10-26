@@ -12,3 +12,6 @@ words = ["cat", "elephant", "dog"]
 result = sorted(words, key=len)  (key=len without () since we are passing the funciton)
 print(result)   мы передаем функцию words во внутрь функции sorted поэтому sorted is considered to be функция высшего порядка
 
+Аннотации типов - указания ожидаемых типов и результата функции. Они по сути только для того чтобы код лучше читался/лучше понимать код
+def add(a: int, b: int) -> int:    (a: int - ожидаемое целое число, -> int: ожидаемый результат)
+    return a + b 
