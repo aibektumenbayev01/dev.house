@@ -1,0 +1,14 @@
+Comprehension - the way of creating the short collection
+for example, simple way of writing the squares of numbers:        comprehension:
+
+numbers = [1, 2, 3, 4]                                            numbers = [1, 2, 3, 4]
+squares = []                                                      squares = [number ** 2 for number in numbers]
+
+for number in numbers:
+    squares.append(number ** 2)
+
+функция высшего порядка:
+words = ["cat", "elephant", "dog"]
+result = sorted(words, key=len)  (key=len without () since we are passing the funciton)
+print(result)   мы передаем функцию words во внутрь функции sorted поэтому sorted is considered to be функция высшего порядка
+
