@@ -21,3 +21,5 @@ for reading and writing files we use the keyword with(), "r" - means reading mid
 with("sample.txt", "r", encoding = "utf-8") as file:   
     text = file.read()
 print(text)
+
+затем у нас вот есть метод .split() чтобы написать как отдельное слово
