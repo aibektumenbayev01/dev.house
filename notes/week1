@@ -44,7 +44,7 @@ for word in unique:
         maxlength = len(word)
 вот этот for loop для выявления длины самого длинного слова в нашем сэте unique
 
-def get_count(pair):
+def get_count(pair: tuple[str, int]) -> int:     (получаем пару [строка, число]) и возвращаем число   АННОТАЦИЯ ТИПОВ
     return pair[1]
 после этого мы определяем что наша функция делает а то есть получает пару (слово, количество) и возвращает второе значение
 sorted_words = sorted(counts.items(), key=get_count, reverse=True)
@@ -54,4 +54,12 @@ counts.items() - дает нам обьект в виде пары «ключ, �
 reverse=True - распределяет по большему к меньшему количеству и все это сохраняем в sorted_words
 
 
-
+counts = {}
+maxlength = 0
+for word in unique:
+    x = words.count(word)
+    counts[word] = x 
+    if maxlength < len(word):
+        maxlength = len(word)
+тут можем спокойно использовать comprehension: counts = {word: words.count(word) for word in unique}
+тут for word in unique берем каждое уникально слово с unique, испрользуем word как ключ слово, и его значение сохраняется с words.count(word)
