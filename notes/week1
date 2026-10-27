@@ -22,4 +22,23 @@ with("sample.txt", "r", encoding = "utf-8") as file:
     text = file.read()
 print(text)
 
-затем у нас вот есть метод .split() чтобы написать как отдельное слово
+для начала мы должны убрать не нужные символы такие как "," или "." Для этого мы вот проверяем каждый элемент в нашем текстте является ли оно
+буквой используя метод isalpha(). если вот буква то смело добавляем += i, а если нет то превращаем в пробел
+for i in text:
+    if i.isalpha():
+        clean_text += i
+    else:
+        clean_text += " "
+
+затем у нас вот есть метод .split() чтобы написать как отдельное слово, и за одно мы каждое слово превращаем в lower case words
+words = clean_text.lower().split()
+unique = set(words) создаем set где слова не повторяются
+
+counts = {}
+maxlength = 0
+for word in unique:
+    x = words.count(word)
+    if maxlength < len(word):
+        maxlength = len(word)
+вот этот for loop для выявления длины самого длинного слова в нашем сэте unique
+        
