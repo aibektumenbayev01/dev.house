@@ -38,7 +38,20 @@ counts = {}
 maxlength = 0
 for word in unique:
     x = words.count(word)
+    counts[word] = x  тут важный момент с словарем counts. то есть сохраняем слово допустим "python" под 
+                      значение х(количество повторений этого "python в words")
     if maxlength < len(word):
         maxlength = len(word)
 вот этот for loop для выявления длины самого длинного слова в нашем сэте unique
-        
+
+def get_count(pair):
+    return pair[1]
+после этого мы определяем что наша функция делает а то есть получает пару (слово, количество) и возвращает второе значение
+sorted_words = sorted(counts.items(), key=get_count, reverse=True)
+
+counts.items() - дает нам обьект в виде пары «ключ, значение», ("cat", 2) тут слова находятся по индексу [0], а значения по индексу [1]
+через key=get_count отправляем наш аргумент в эту функция и возвращаем только второй индекс pair[1] а то есть количество
+reverse=True - распределяет по большему к меньшему количеству и все это сохраняем в sorted_words
+
+
+
