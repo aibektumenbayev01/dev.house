@@ -63,3 +63,7 @@ for word in unique:
         maxlength = len(word)
 тут можем спокойно использовать comprehension: counts = {word: words.count(word) for word in unique}
 тут for word in unique берем каждое уникально слово с unique, испрользуем word как ключ слово, и его значение сохраняется с words.count(word)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+arguments are the values that we give while parameters are just the names of the inputs which we define the function
