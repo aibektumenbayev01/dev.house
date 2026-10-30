@@ -67,3 +67,37 @@ for word in unique:
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 arguments are the values that we give while parameters are just the names of the inputs which we define the functionj
+import sys
+if (len(sys.argv) < 2):
+    print("Укажите путь к файлу") 
+    sys.exit(1)
+try:
+    with open(sys.argv[1], "r", encoding="utf-8") as file:
+        text = file.read()
+except FileNotFoundError:
+    print("Файл не найден.")
+    sys.exit(1)
+if not text.strip():
+    print("Файл пустой.")
+    sys.exit(1)
+
+import sys: блок с sys получает путь к файлу, 
+sys.argv: путь к файлу который нужно прочитать
+допустим если вызываем: python3 word_counter.py sample.txt и список файлов у нас такой: 
+["word_counter.py", "sample.txt"]
+#        [0]             [1]
+тогда sys.argv[1]: это путь к sample.txt который нужно прочитать
+if (len(sys.argv) < 2):
+    print("Укажите путь к файлу") 
+    sys.exit(1) 
+и тут мы проверяем передал ли юзер правильный путь
+sys.exit(1): если длина будет 1 то программа напечает сообщение и выдаст ошибку с кодовым значением 1
+без этой проверки у нас был бы IndexError
+
+try expept - означает то что попробуй выполнить код с try, если не получится то переходи к else 
+
+if not text.strip():
+    print("Файл пустой.")
+    sys.exit(1)
+метод strip() возвращает строку без пробелов без табуляции, удаляет все не нужное чтобы удобнее было работать. 
+и вот если у нас не получится использовать этот text.strip то это означает то что файл пустой
