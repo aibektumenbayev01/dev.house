@@ -109,3 +109,21 @@ in binary each position represents a power of 2 (1 starts from the right side):
 0  1  0  1
 8  4  2  1   then calculate: 0*8+1*4+0*2+1*1 = 5 
 so, 0101 in decimal is 5
+
+bitwise operator: &, |, 
+For individual bits, & gives the same result as multiplication:
+1 & 1 = 1     0101 & 0011 = 0001 
+0 & 1 = 0
+1 & 0 = 0
+0 & 0 = 0 
+
+For OR (|) - if either the bit is 1 then it remains 1 (0 does not make any changes), if all of the bits is 0 in making calculation then it's 0
+0101 | 0011 = 0111 
+
+For XOR (^) - means that two bits must be different to produce 1, to produce 0 they must be the same:
+0101 ^ 0011 = 0110
+
+0b is used to indicate that what follows is a binary number: 0b0011
+
+we know that (101, 2) means that the binary string 101 is written in the base of 2 (0b101 = 1*2^2 + 1*2^1 + 1*2^0 = 5)
+num = int("101", 10) = 101 : we use that int() function to convert binary string to integer
