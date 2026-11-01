@@ -303,3 +303,18 @@ def get_even_and_odd_teams(players):
 players = ["Aibek", "Bobby", "Sam", "Frodo", "Gimli"]
 a = get_even_and_odd_teams(players)
 print(a)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DICTIONARY
+
+def get_character_record(name, server, level, rank): 
+    a = {
+        "name": name,
+        "server": server,
+        "level": level,
+        "rank": rank,
+        "id": f"{name}#{server}"
+    }
+    return a
+b = get_character_record("Aibek", "e", "e", "e")
+print(b["id"])   ---  A value is retrieved from a dictionary by specifying its corresponding key in square brackets. 
+The square brackets look similar to indexing into a list.
