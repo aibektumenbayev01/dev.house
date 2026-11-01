@@ -278,3 +278,28 @@ def filter_messages(messages):
 message = ["dang it bobby!", "look at it go"]
 a = filter_messages(message)
 print(a)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def get_even_and_odd_teams(players):
+    evenlist = []
+    oddlist = []
+    for i in range(0, len(players), 1):
+        if i % 2 == 0:
+            evenlist.append(players[i])
+        else:
+            oddlist.append(players[i])
+    return evenlist, oddlist
+    
+players = ["Aibek", "Bobby", "Sam", "Frodo", "Gimli"]
+a = get_even_and_odd_teams(players)
+print(a)
+
+or using slices:
+def get_even_and_odd_teams(players):
+    evenlist = players[0::2]
+    oddlist = players[1::2]
+    return evenlist, oddlist
+    
+players = ["Aibek", "Bobby", "Sam", "Frodo", "Gimli"]
+a = get_even_and_odd_teams(players)
+print(a)
