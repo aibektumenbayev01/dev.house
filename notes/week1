@@ -152,3 +152,35 @@ def contains_health_potion(items):
             found = True
 
     return found
+def check_character_levels():
+    old_character_levels = [1, 42, 43, 53, 12, 3, 32, 34, 54, 32, 43]
+    new_character_levels = [1, 42, 45, 54, 12, 3, 32, 38, 54, 32, 42]
+
+    for i in range(0, len(old_character_levels)):
+        if new_character_levels[i] >  old_character_levels[i]:
+            print(i)
+
+def test():
+    print("Character level increased at indexes:")
+    check_character_levels()
+    print("=====================================")
+
+def main():    when main() is called then call test()
+    test() 
+
+main()  
+
+
+def find_max(nums):
+    max_so_far = float("-inf") //initializing 
+
+    for number in nums:
+        if number > max_so_far:
+            max_so_far = number
+
+    return max_so_far
+
+
+nums = [100, 10, 22]
+max_val = find_max(nums)
+print(max_val)  # 100
