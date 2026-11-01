@@ -249,3 +249,5 @@ def reverse_odd_numbers(nums):
 
     return result
     
+.split() - returns a list by separating each word as a string
+.join() - returns several string to one single string
