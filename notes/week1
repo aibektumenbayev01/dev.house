@@ -251,3 +251,30 @@ def reverse_odd_numbers(nums):
     
 .split() - returns a list by separating each word as a string
 .join() - returns several string to one single string
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+We need to filter the profanity out of our game's live chat feature! Complete the filter_messages function. It takes a list of chat messages as input and returns two new lists:
+
+A list of the same messages but with all instances of the word dang removed.
+A list containing the number of dang words that were removed from each message at that particular index.
+
+def filter_messages(messages):
+    finallist = []
+    finalcount = []
+    for sentence in messages:
+        remvdang = []
+        dangcount = 0
+        newlist = sentence.split()
+        for i in range(0, len(newlist), 1):
+            if newlist[i] == "dang":
+                dangcount += 1
+            else:
+                remvdang.append(newlist[i])
+        final = " ".join(remvdang)
+        finallist.append(final)
+        finalcount.append(dangcount)
+
+    return finallist, finalcount
+
+message = ["dang it bobby!", "look at it go"]
+a = filter_messages(message)
+print(a)
