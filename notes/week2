@@ -15,3 +15,4 @@ class Wall:
 here we are using self.armor instead of armor since self is helping us to refer Wall's method. so with using self.armor we are getting an access 
 to armor of particular method
 --------------------------------------------------------------------------------------------------------
+constructor initializes the object when we are creating it. In Python we write this initialization in a method called __init__
