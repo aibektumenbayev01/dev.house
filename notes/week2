@@ -1,3 +1,17 @@
 Clean code doesn't make a program faster or more correct, but it does make bugs easier to find and future changes easier to make.
 if a class is a new custom type, what's an object? Objects are just instances of a class. meaning of Instances - an example of or a specific case of
 
+def take_damage(self, damage: int) -> None:
+  self.health -= damage
+self - it's a reference to the object in our method
+-------------------------------------------------------------------------------------------
+class Wall:
+    armor: int = 10
+    height: int = 5
+
+    def get_cost(self) -> int:
+        cost = self.armor * self.height
+        return cost
+here we are using self.armor instead of armor since self is helping us to refer Wall's method. so with using self.armor we are getting an access 
+to armor of particular method
+--------------------------------------------------------------------------------------------------------
