@@ -1,1 +1,3 @@
+Clean code doesn't make a program faster or more correct, but it does make bugs easier to find and future changes easier to make.
+if a class is a new custom type, what's an object? Objects are just instances of a class. meaning of Instances - an example of or a specific case of
 
