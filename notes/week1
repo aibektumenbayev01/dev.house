@@ -318,3 +318,9 @@ def get_character_record(name, server, level, rank):
 b = get_character_record("Aibek", "e", "e", "e")
 print(b["id"])   ---  A value is retrieved from a dictionary by specifying its corresponding key in square brackets. 
 The square brackets look similar to indexing into a list.
+
+to delete the existing keys we just use del namesofdict["variable"]
+
+to check wheter a key in the dictionary again we use in
+cars = {"ford": "f150", "toyota": "camry"}
+print("ford" in cars)
