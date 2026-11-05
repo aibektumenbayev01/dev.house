@@ -16,3 +16,4 @@ here we are using self.armor instead of armor since self is helping us to refer 
 to armor of particular method
 --------------------------------------------------------------------------------------------------------
 constructor initializes the object when we are creating it. In Python we write this initialization in a method called __init__
+nm
