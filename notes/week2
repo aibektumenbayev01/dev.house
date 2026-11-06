@@ -13,7 +13,7 @@ class Wall:
         cost = self.armor * self.height
         return cost
 here we are using self.armor instead of armor since self is helping us to refer Wall's method. so with using self.armor we are getting an access 
-to armor of particular method
+to armor of particular methodv
 --------------------------------------------------------------------------------------------------------
 constructor initializes the object when we are creating it. In Python we write this initialization in a method called __init__
 nm
