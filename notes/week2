@@ -16,4 +16,12 @@ here we are using self.armor instead of armor since self is helping us to refer 
 to armor of particular methodv
 --------------------------------------------------------------------------------------------------------
 constructor initializes the object when we are creating it. In Python we write this initialization in a method called __init__
-nm
+self is working like this in java:
+class Wall:
+  def __inir__(self, armor, height):
+    self.armor = armor
+    self.height = height
+wall_one = Wall(10, 5)  creating new object with arguments 10 and 5
+wall_two = Wall(13, 4)  
+
+print(wall_one.height)  here we access specific arguments
