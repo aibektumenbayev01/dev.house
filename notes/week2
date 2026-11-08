@@ -32,34 +32,16 @@ wall_one wall_two - two separate instances
 1, 2, 3 - arguments passed
 wall.one.depth - attribute that is storing arguments passed
 
-class Archer:
-    name: str
-    health: int
-    num_arrows: int
 
-    def __init__(self, name: str, health: int, num_arrows: int) -> None:
-        self.name = name
-        self.health = health
-        self.num_arrows = num_arrows
-        
+----------------------------------------------------------------------------------------------------
 
-    def take_hit(self) -> None:
-         self.health -= 1
-         if self.health <= 0:
-            raise Exception(f"{self.name} is dead")
+class variables - written at the top in the class section and belongs to the class it shared
+instance variables - belongs to each individual specific object
 
-    def shoot(self, target: "Archer") -> None:
-        if self.num_arrows <= 0:
-            raise Exception(f"{self.name} can't shoot")
-        self.num_arrows -= 1
-        print(f"{self.name} shoots {target.name}")
-        target.take_hit()
-
-    # don't touch below this line
-
-    def get_status(self) -> tuple[str, int, int]:
-        return self.name, self.health, self.num_arrows
-
-    def print_status(self) -> None:
-        print(f"{self.name} has {self.health} health and {self.num_arrows} arrows")
-
+class Student:
+  name = "fff"   class variable 
+def __init__(init, name):
+  self.name = name  instance variable
+outside of the class:
+Student.name = "eee"   class var
+student.city = "ssf"   instance var
