@@ -25,3 +25,4 @@ wall_one = Wall(10, 5)  creating new object with arguments 10 and 5
 wall_two = Wall(13, 4)  
 
 print(wall_one.height)  here we access specific arguments
+
