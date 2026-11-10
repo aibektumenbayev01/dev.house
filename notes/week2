@@ -45,3 +45,45 @@ def __init__(init, name):
 outside of the class:
 Student.name = "eee"   class var
 student.city = "ssf"   instance var
+
+----------------------------------------------------------------------------------------------------
+
+class Movie:
+    def __init__(self, title, director):
+        self.title = title
+        self.director = director
+class MovieCollection:
+    def __init__(self, name):
+        self.name = name
+        self.movies: list[Movie] = []
+    def add_movie(self, movie: Movie) -> None:
+        self.movies.append(movie)
+    def search_movies(self, query):
+        matches = []
+        query = query.lower()
+        for movie in self.movies:
+            if query in movie.title.lower() or query in movie.director.lower():
+                matches.append(movie)
+        return matches
+
+collection = MovieCollection("My movies") #collection refers to the whole MovieCollection object 
+#collection - the whole object, collection.name = "My movies", collection.movies = []                        
+
+collection.add_movie(Movie("Interstellar", "Nolan")) #the whole Movie object goes inside of our empty list collection.movies
+collection.add_movie(Movie("INcreption", "Nolan")) #after printing this 2nd line we get our list:
+#[(Movie("Interstellar", "Nolan"), Movie("INcreption", "Nolan")]
+
+matches = collection.search_movies("nolan") 
+# here we are passing "nolan" into search_movies and parameter query receives "nolan"
+
+for movie in matches: #matches is the list returned after the method search_movies
+    print(movie.director)
+
+self means "this particular object".
+movie is our object
+self.name: here name is parameter, self.name = name means we take the value passed into the name parameter
+                                   and store it under the name "name"
+movie = Movie("Interstellar", "Nolan") here movie is the object
+print(movie.title) - title is the attribute name, "Nolan" means the value stored in that attribute
+
+self.title = title : here parameter title receives our passed argument "Interstellar" and self.title allows us to save it under the parameter title
