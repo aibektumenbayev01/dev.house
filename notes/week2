@@ -100,6 +100,37 @@ we store them in the method __init__ , using self.title = title. Here we are sto
 under the parameter title. so after this initial setup we can use self.title as variable in other method
 or we can get access to object title by writing movie.title and get "Interstellar" as a result
 
+---------------------
+class MovieCollection:
+    def __init__(self):
+        self.movies = []
 
-	
+    def add_movie(self, movie):
+        self.movies.append(movie)
+
+
+collection = MovieCollection()
+collection.add_movie(movie1)
+collection.add_movie(movie2)
+
+here we are creating variable collection. code itself is written from right to the left: MovieCollection() creates a new object. 
+runs __init__ where we saved our new object as an empty list self.movies[], using self.movies. Later on collection becomes the name with what
+we can get access on that empty list self.movies. So by writing (collection.add_movie(movie1)) we are passing argument movie1
+to method add_movie under the parameter movie, and there we got self.movies.append(movie1). so to our empty list self.movies
+we are appending movie1
+
+    def search_movies(self, query):
+        matches = []
+        query = query.lower()
+
+        for movie in self.movies: 
+            if query in movie.title.lower():
+                matches.append(movie)
+
+        return matches
+for collection.search_movies("CEPT") we get:
+1. self refers to collection, matches starts as [], and query.lower() turns "CEPT" into "cept".
+2. The loop gets Interstellar from self.movies. "cept" in "interstellar" is False, so it skips that movie.
+3. The loop gets Inception. "cept" in "inception" is True, so matches.append(movie) adds the whole Movie object.
+4. After the loop, return matches returns the list containing that one object. You can read its title with matches[0].title, which gives "Inception".
  
