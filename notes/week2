@@ -86,4 +86,20 @@ self.name: here name is parameter, self.name = name means we take the value pass
 movie = Movie("Interstellar", "Nolan") here movie is the object
 print(movie.title) - title is the attribute name, "Nolan" means the value stored in that attribute
 
-self.title = title : here parameter title receives our passed argument "Interstellar" and self.title allows us to save it under the parameter title
+self.title = title: here parameter title receives our passed argument "Interstellar" and self.title allows us to save it under the parameter title
+__init__ is the method that Python run automatically to set up a new object. 
+class Movie:
+    def __init__(self, title):
+        self.title = title
+
+movie1 = Movie("Interstellar")   here each movie has its own title attribute
+movie2 = Movie("Inception")
+print(movie.title)  # Interstellar
+here Python creates new instance Movie("Interstellar") of the class Movie, then those our passed arguments we need to store them,
+we store them in the method __init__ , using self.title = title. Here we are storing our argument "Interstellar" using self.title
+under the parameter title. so after this initial setup we can use self.title as variable in other method
+or we can get access to object title by writing movie.title and get "Interstellar" as a result
+
+
+	
+ 
