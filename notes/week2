@@ -133,4 +133,43 @@ for collection.search_movies("CEPT") we get:
 2. The loop gets Interstellar from self.movies. "cept" in "interstellar" is False, so it skips that movie.
 3. The loop gets Inception. "cept" in "inception" is True, so matches.append(movie) adds the whole Movie object.
 4. After the loop, return matches returns the list containing that one object. You can read its title with matches[0].title, which gives "Inception".
+
+----------------------------------------------------------------------------------------------------
+
+class Contact:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+class ContactList:
+    def __init__(self, numb):
+        self.numb = numb
+        self.contacts = []
+    def add_contact(self, contact):
+        self.contacts.append(contact)
+    def remove_contact(self, contact):
+        newlist = []
+        for saved_contact in self.contacts:
+            if not (saved_contact.name == contact.name and #can't use saved_contact.lower().name since in a dot chain python reads from left to right
+                                                           #saved_contact is an object with two attributes .name and .phone.
+                                                           #while to use .lower() we need a string value.
+                    saved_contact.phone == contact.phone):
+                newlist.append(saved_contact)
+        self.contacts = newlist
+        return newlist 
+        
+    def find_contacts(self, name):
+        final_list = []
+        for i in self.contacts:
+            if i.name.lower() == name.lower():
+                final_list.append(i)
+        return final_list
+
+contacts = ContactList("rfe")
+
+contacts.add_contact(Contact("Alex", 444))
+contacts.add_contact(Contact("ALEx", 434))
+contacts.add_contact(Contact("alex", 4244))
+
+print(len(contacts.find_contacts("alex")))
+
  
