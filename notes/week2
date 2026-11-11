@@ -168,7 +168,7 @@ contacts = ContactList("rfe")
 
 contacts.add_contact(Contact("Alex", 444))
 contacts.add_contact(Contact("ALEx", 434))
-contacts.add_contact(Contact("alex", 4244))
+contacts.remove_contact(Contact("alex", 4244))
 
 print(len(contacts.find_contacts("alex")))
 
