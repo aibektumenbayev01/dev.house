@@ -176,3 +176,25 @@ print(len(contacts.find_contacts("alex")))
 
 Encapsulation is not about security, it's about organizational clean code for other developers. making internal class private does not making it secure from public users, it just tells that
 it's inter detail of your class, so it does not stop looking what is inside.
+
+class Wizard:
+    def __init__(self, name: str, stamina: int, intelligence: int) -> None:
+        self.name = name
+        self.__stamina = stamina
+        self.__intelligence = intelligence
+        self.mana = self.__intelligence * 10
+        self.health = self.__stamina * 100
+
+    # don't touch above this line
+
+    def get_fireballed(self, fireball_damage: int) -> None:
+        fireball_damage -= self.__stamina
+        self.health -= fireball_damage
+
+    def drink_mana_potion(self, potion_mana: int) -> None:
+        potion_mana += self.__intelligence
+        self.mana += potion_mana
+__init__ stores stamina, intelligence, health, and mana on the wizard. Later methods read or update those values on the same object using self..
+- self.__stamina means “read this wizard’s stored stamina.”
+- fireball_damage means “use the damage passed into this call.”
+For example, if you call wizard.get_fireballed(50) and then wizard.get_fireballed(30), fireball_damage starts at 50 in the first call and 30 in the second. Each call reads stamina from the wizard and updates the health that the next call will see.
