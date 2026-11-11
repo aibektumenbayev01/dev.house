@@ -172,4 +172,7 @@ contacts.remove_contact(Contact("alex", 4244))
 
 print(len(contacts.find_contacts("alex")))
 
- 
+ ----------------------------------------------------------------------------------------------------
+
+Encapsulation is not about security, it's about organizational clean code for other developers. making internal class private does not making it secure from public users, it just tells that
+it's inter detail of your class, so it does not stop looking what is inside.
