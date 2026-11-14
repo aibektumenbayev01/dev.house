@@ -198,3 +198,4 @@ __init__ stores stamina, intelligence, health, and mana on the wizard. Later met
 - self.__stamina means “read this wizard’s stored stamina.”
 - fireball_damage means “use the damage passed into this call.”
 For example, if you call wizard.get_fireballed(50) and then wizard.get_fireballed(30), fireball_damage starts at 50 in the first call and 30 in the second. Each call reads stamina from the wizard and updates the health that the next call will see.
+1
