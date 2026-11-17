@@ -1,1 +1,27 @@
-n
+class Book:
+    def __init__(self, title):          
+        self.title = title
+        self.is_borrowed = False   
+
+    def borrow(self):   
+        if self.is_borrowed:  #self.is_borrowed == True
+            raise ValueError("This book is already borrowed")              
+        self.is_borrowed = True  
+
+    def return_item(self): 
+        if not self.is_borrowed: #self.is_borrowed == False
+            raise ValueError("This book is available my brother")
+        self.is_borrowed = False
+
+
+book = Book("Why We Sleep")
+
+book.borrow()                       # 1. False becomes True
+book.return_item()                  # 2. True becomes False
+   
+
+try: #try - attempts to borrow this book, if a ValueError happens, it prints its message and continue the coding process
+    book.borrow()
+except ValueError as error: #without this exception block, Python will print error message and stops the running process
+    print(error)         
+print(book.is_borrowed)                 
