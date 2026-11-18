@@ -1,4 +1,10 @@
 from enum import Enum
+from abc import ABC, abstractmethod
+from datetime import datetime, timezone
+
+class LoanStatus(Enum):
+    ACTIVE = "active" # in enum both converted boolean values are always True
+    RETURNED = "returned"
 
 class ItemStatus(Enum):
     AVAILABLE = "available"
@@ -13,35 +19,65 @@ class BookNotAvailable(LibraryError):
 class LoanNotActive(LibraryError):
     pass
 
-class Book:
+class TimestampMixin:
+    def touch(self):
+        self.updated_at = datetime.now(timezone.utc) #we get the current date and time in UTC and store it in the object self.updated_at 
+                                        #we chose touch() means "update the timestamp"
+
+class LibraryItem(TimestampMixin, ABC):
     def __init__(self, title):          
-        self.title = title
-        self.status = ItemStatus.AVAILABLE   
+        self.title = title 
+        self.status = ItemStatus.AVAILABLE  
+        self.touch()  
+
+    @abstractmethod
+    def description(self):
+        pass
 
     def borrow(self):   
         if self.status == ItemStatus.BORROWED:  #self.status == True
             raise BookNotAvailable("This book is already borrowed")              
-        self.status = ItemStatus.BORROWED  
+        self.status = ItemStatus.BORROWED 
+        self.touch() 
 
     def return_item(self): 
         if self.status == ItemStatus.AVAILABLE: #self.is_borrowed == False
-            raise LibraryError("This book is available my brother")
+            raise LibraryError("This book is already returned my brother")
         self.status = ItemStatus.AVAILABLE
+        self.touch()
+
+
+class Book(LibraryItem):
+    def __init__(self, title, author):
+        super().__init__(title) #it runs LibraryItem.__init__(), it stores the title and starting status 
+        self.author = author
+    
+    def description(self): #polymorphism
+        return f"Book: {self.title}, author {self.author}"
+
+class Magazine(LibraryItem):
+    def __init__(self, title, issue_number):
+        super().__init__(title)
+        self.issue_number = issue_number
+
+    def description(self): #polymorphism
+        return f"Magazine: {self.title}, issue: {self.issue_number}"
 
 class Reader: #stores a person's name
-    def __init__(self, name): 
+    def __init__(self, name: str) -> None: 
         self.name = name
 #In general, loan means a record of someone borrowing an item. here it means which reader borrowed which book
 class Loan: #stores references to a book and a reader, linking them together
-    def __init__(self, book, reader):
+    def __init__(self, book: LibraryItem, reader: Reader) -> None:
         self.book = book
         self.reader = reader
-        self.is_active = True #is_active here is new attribute to Loan
+        self.status = LoanStatus.ACTIVE 
+
 class Library:
-    def __init__(self):
-        self.books = []
-        self.readers = []
-        self.loans = []
+    def __init__(self) -> None:
+        self.books: list[LibraryItem] = [] #a list intended to contain library items
+        self.readers: list[Reader] = []
+        self.loans: list[Loan]= []
 
     def add_book(self, book):
         self.books.append(book)
@@ -49,9 +85,9 @@ class Library:
     def add_reader(self, reader):
         self.readers.append(reader)
     
-    def lend(self, book, reader): #lend means to give temporarily something to someone with expectation of returning 
+    def lend(self, book: LibraryItem, reader: Reader) -> Loan: #lend means to give temporarily something to someone with expectation of returning 
         if book not in self.books:
-            raise LibraryError("book is nor registered") #by writing library.add_book(book) we are making registration of necessary books
+            raise LibraryError("book is not registered") #by writing library.add_book(book) we are making registration of necessary books
         if reader not in self.readers:
             raise LibraryError("reader is not registered")
         
@@ -59,32 +95,23 @@ class Library:
         loan = Loan(book, reader)
         self.loans.append(loan)
         return loan #here we return so that in the remaining code we can use it
+    
     def return_loan(self, loan):
         if loan not in self.loans:
             raise LibraryError("nono brother, loan is in another library")
-        if not loan.is_active:               
-            raise LoanNotActive("nooo, loan is already nor active")   
+        
+        if not loan.status == LoanStatus.ACTIVE: #bool(LoanStatus.ACTIVE) and bool(LoanStatus.RETURNED) both of them are True values              
+            raise LoanNotActive("nooo, loan is already not active")   
      
         loan.book.return_item()
-        loan.is_active = False
+        loan.status = LoanStatus.RETURNED
 
 
 
-library = Library()
-other_library = Library()
-book = Book("Why We Sleep")
-reader = Reader("Aibek")
+book = Book("Why We Sleep", "Matthew Walker")
 
-library.add_book(book)
-library.add_reader(reader)
-loan = library.lend(book, reader)
-library.return_loan(loan)
-
-try:    
-    library.return_loan(loan)
-except LibraryError as error:
-    print(error)
-
-
-print(book.status.value)
-print(loan.is_active)
+print(book.updated_at)
+book.borrow()
+print(book.updated_at)
+book.return_item()
+print(book.updated_at)
