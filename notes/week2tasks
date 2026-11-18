@@ -1,27 +1,90 @@
+from enum import Enum
+
+class ItemStatus(Enum):
+    AVAILABLE = "available"
+    BORROWED = "borrowed"
+
+class LibraryError(Exception):
+    pass
+
+class BookNotAvailable(LibraryError):
+    pass
+
+class LoanNotActive(LibraryError):
+    pass
+
 class Book:
     def __init__(self, title):          
         self.title = title
-        self.is_borrowed = False   
+        self.status = ItemStatus.AVAILABLE   
 
     def borrow(self):   
-        if self.is_borrowed:  #self.is_borrowed == True
-            raise ValueError("This book is already borrowed")              
-        self.is_borrowed = True  
+        if self.status == ItemStatus.BORROWED:  #self.status == True
+            raise BookNotAvailable("This book is already borrowed")              
+        self.status = ItemStatus.BORROWED  
 
     def return_item(self): 
-        if not self.is_borrowed: #self.is_borrowed == False
-            raise ValueError("This book is available my brother")
-        self.is_borrowed = False
+        if self.status == ItemStatus.AVAILABLE: #self.is_borrowed == False
+            raise LibraryError("This book is available my brother")
+        self.status = ItemStatus.AVAILABLE
+
+class Reader: #stores a person's name
+    def __init__(self, name): 
+        self.name = name
+#In general, loan means a record of someone borrowing an item. here it means which reader borrowed which book
+class Loan: #stores references to a book and a reader, linking them together
+    def __init__(self, book, reader):
+        self.book = book
+        self.reader = reader
+        self.is_active = True #is_active here is new attribute to Loan
+class Library:
+    def __init__(self):
+        self.books = []
+        self.readers = []
+        self.loans = []
+
+    def add_book(self, book):
+        self.books.append(book)
+    
+    def add_reader(self, reader):
+        self.readers.append(reader)
+    
+    def lend(self, book, reader): #lend means to give temporarily something to someone with expectation of returning 
+        if book not in self.books:
+            raise LibraryError("book is nor registered") #by writing library.add_book(book) we are making registration of necessary books
+        if reader not in self.readers:
+            raise LibraryError("reader is not registered")
+        
+        book.borrow()
+        loan = Loan(book, reader)
+        self.loans.append(loan)
+        return loan #here we return so that in the remaining code we can use it
+    def return_loan(self, loan):
+        if loan not in self.loans:
+            raise LibraryError("nono brother, loan is in another library")
+        if not loan.is_active:               
+            raise LoanNotActive("nooo, loan is already nor active")   
+     
+        loan.book.return_item()
+        loan.is_active = False
 
 
+
+library = Library()
+other_library = Library()
 book = Book("Why We Sleep")
+reader = Reader("Aibek")
 
-book.borrow()                       # 1. False becomes True
-book.return_item()                  # 2. True becomes False
-   
+library.add_book(book)
+library.add_reader(reader)
+loan = library.lend(book, reader)
+library.return_loan(loan)
 
-try: #try - attempts to borrow this book, if a ValueError happens, it prints its message and continue the coding process
-    book.borrow()
-except ValueError as error: #without this exception block, Python will print error message and stops the running process
-    print(error)         
-print(book.is_borrowed)                 
+try:    
+    library.return_loan(loan)
+except LibraryError as error:
+    print(error)
+
+
+print(book.status.value)
+print(loan.is_active)
