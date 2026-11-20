@@ -1,6 +1,7 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
+from dataclasses import dataclass
 
 class LoanStatus(Enum):
     ACTIVE = "active" # in enum both converted boolean values are always True
@@ -33,7 +34,7 @@ class LibraryItem(TimestampMixin, ABC):
     @abstractmethod
     def description(self):
         pass
-
+    
     def borrow(self):   
         if self.status == ItemStatus.BORROWED:  #self.status == True
             raise BookNotAvailable("This book is already borrowed")              
@@ -63,9 +64,10 @@ class Magazine(LibraryItem):
     def description(self): #polymorphism
         return f"Magazine: {self.title}, issue: {self.issue_number}"
 
+@dataclass
 class Reader: #stores a person's name
-    def __init__(self, name: str) -> None: 
-        self.name = name
+    name: str
+
 #In general, loan means a record of someone borrowing an item. here it means which reader borrowed which book
 class Loan: #stores references to a book and a reader, linking them together
     def __init__(self, book: LibraryItem, reader: Reader) -> None:
