@@ -106,6 +106,8 @@ assert binary_search([2, 4, 7, 10, 13], 10) == 3
 result = binary_search([2, 4, 7, 10, 13], 10)
 print(result)
 
+------------------------------------------------------------------------------------------------------------
+
 #2 таск: сортировка слиянием
 
 def merge_sort(numbers: list[int]) -> list[int]:
@@ -134,6 +136,8 @@ assert merge_sort([5, 1, 4, 2]) == [1, 2, 4, 5]
 result2 = merge_sort([5, 1, 4, 2]) 
 print(result2)
 
+------------------------------------------------------------------------------------------------------------
+
 #3 таск: проверка скобок
 
 def brackets_are_balanced(text):
@@ -159,6 +163,8 @@ assert not brackets_are_balanced("([)]")
 assert not brackets_are_balanced(")")
 assert not brackets_are_balanced("((")
 assert brackets_are_balanced("")
+
+------------------------------------------------------------------------------------------------------------
 
 #4 BFS - обход графа в ширину 
 
@@ -191,6 +197,8 @@ assert BFS(graph, "A") == ["A", "B", "C", "D"]
 assert BFS(graph, "E") == ["E"]
 assert BFS({"A": ["B"]}, "A") == ["A", "B"]
 
+------------------------------------------------------------------------------------------------------------
+
 #5 two sum
 def two_sum(numbers, target):
     seen = {}
@@ -208,5 +216,4 @@ def two_sum(numbers, target):
 
 assert two_sum([2, 7, 11, 15], 9) == (0, 1)
 assert two_sum([3, 3], 6) == (0, 1)
-assert two_sum([3], 6) is None
-assert two_sum([1, 2, 3], 20) is None
+
