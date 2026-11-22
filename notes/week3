@@ -46,4 +46,138 @@ print(result)
 это был первый метод, второй метод под потоки: ThreadPoolExecutor,если первый метод нанимал только одного кассира, второй метод
 сразу несколько. Например 10 штук: (max_workers=10) и как только любой из потоков освобождается сразу берется следующая ссылка из списка
 
+import httpx
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from time import perf_counter
+import asyncio
+
+def fetch_one(url) -> bool:
+    try:
+        response = httpx.get(url, timeout=5, follow_redirects=True)
+        return response.is_success
+    except httpx.RequestError:
+        return False
+    
+
+def run_sequential(urls):
+    success = 0
+    failed = 0
+    start = perf_counter()
+    for url in urls: 
+        result = fetch_one(url)
+        if result: #True
+            success += 1
+        else: #False
+            failed += 1
+    #start = perf_counter() это начало показание счетчика
+    elapsed = perf_counter() - start  #а тут perf_counter() это показание счетчика который уже идет
+    print(f"[1. Последовательно] Успешно: {success} | Ошибок: {failed} | Время: {elapsed:.2f} с")
+
+def run_threaded(urls: list[str]):
+    start = perf_counter()
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        results = list(executor.map(fetch_one, urls))
+    elapsed = perf_counter() - start
+    success = sum(results)
+    failed = len(results) - success
+    print(f"[2. Потоки (10)]     Успешно: {success} | Ошибок: {failed} | Время: {elapsed:.2f} с")
+
+async def fetch_one_async(url, client, semaphore):
+    
+
+file_path = Path(__file__).with_name("urls.txt")
+lines = file_path.read_text(encoding="utf-8").splitlines()
+urls = [line.strip() for line in lines if line.strip()]
+
+run_sequential(urls)
+run_threaded(urls)
+
+тут во втором методе мы создаем до 10 работчих потоков. каждый поток вызывает fetch_one(url) и ждет ответа
+по своему адресу. как только запрос заканчивается, поток берет следующий URL адрес.
+
+в третьем методе у нас один поток управляет запросами. когда первый запрос доходит до await client.get(url) и 
+ждет данные от сервера, тот же поток во время ожидания может заняться вторым, третьим и так далее. Semaphore(10)
+ограничивает число запросов в работе до 10
+
+import httpx
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from time import perf_counter
+import asyncio
+
+def fetch_one(url) -> bool:
+    try:
+        response = httpx.get(url, timeout=5, follow_redirects=True)
+        return response.is_success
+    except httpx.RequestError:
+        return False
+    
+
+def run_sequential(urls):
+    success = 0
+    failed = 0
+    start = perf_counter()
+    for url in urls: 
+        result = fetch_one(url)
+        if result: #True
+            success += 1
+        else: #False
+            failed += 1
+    #start = perf_counter() это начало показание счетчика
+    elapsed = perf_counter() - start  #а тут perf_counter() это показание счетчика который уже идет
+    print(f"[1. Последовательно] Успешно: {success} | Ошибок: {failed} | Время: {elapsed:.2f} с")
+
+def run_threaded(urls: list[str]):
+    start = perf_counter()
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        results = list(executor.map(fetch_one, urls))
+    elapsed = perf_counter() - start
+    success = sum(results)
+    failed = len(results) - success
+    print(f"[2. Потоки (10)]     Успешно: {success} | Ошибок: {failed} | Время: {elapsed:.2f} с")
+
+async def fetch_one_async(url, client, semaphore) -> bool:
+    async with semaphore:
+        try:
+            response = await client.get(url)
+            return response.is_success
+        except httpx.RequestError:
+            return False
+        
+async def fetch_all_async(urls: list[str]):
+    semaphore = asyncio.Semaphore(10)
+
+    async with httpx.AsyncClient(timeout=5, follow_redirects=True) as client: 
+                        #создаем один HTTP-клиент на все адреса, сохраняем в обьект client. через client fetch_one_async отправляет запросы
+                        #когда работа внутри блока заканчивается то client автоматически закрывается
+        tasks = []
+        for url in urls:
+            tasks.append(fetch_one_async(url, client, semaphore)) #для каждого url мы вызываем fetch_one_async
+                        #и добавляем в список tasks то что возвращает вызов fetch_one_async, то есть в tasks у нас подготовленные для запуска вызовы
+
+        return await asyncio.gather(*tasks) #gather запускает эти подготовленные вызовы, await ждет пока все вызовы закончатся
+                    #*tasks раскрывает список (то есть tasks[0], tasks[1], tasks[2]). когда все закончится gather возвращает в порядке исходных URL, даже если ответы пришли абсолютно в рандомном порядке
+
+def run_async(urls: list[str]):
+    start = perf_counter() #начальное показание счетчика
+    results = asyncio.run(fetch_all_async(urls)) #берем список urls и передаем его в fetch_all_async, asyncio.run запускает асинхронный код и ждет его код
+    elapsed = perf_counter() - start
+
+    success = sum(results)
+    failed = len(results) - success
+    print(f"[3. Asyncio (10)]    Успешно: {success} | Ошибок: {failed} | Время: {elapsed:.2f} с")
+
+
+
+file_path = Path(__file__).with_name("urls.txt")
+lines = file_path.read_text(encoding="utf-8").splitlines()
+urls = [line.strip() for line in lines if line.strip()]
+
+run_sequential(urls)
+run_threaded(urls)
+run_async(urls)
+
 
