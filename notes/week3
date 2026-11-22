@@ -22,7 +22,7 @@ success = 0
 failed = 0
 start = perf_counter()
 
-for line in lines: 
+for line in lines:  # пока первый покупатель(URL) не оплатил покупку, второй ждет своей очереди
     url = line.strip()
     if not url: 
         continue #если строка пустая после .strip(): "" то смело continue 
@@ -42,4 +42,8 @@ print(f"Время: {elapsed:.2f} с")
 firsturl = "https://jsonplaceholder.typicode.com/posts/1"
 result = fetch_one(firsturl)
 print(result)
+
+это был первый метод, второй метод под потоки: ThreadPoolExecutor,если первый метод нанимал только одного кассира, второй метод
+сразу несколько. Например 10 штук: (max_workers=10) и как только любой из потоков освобождается сразу берется следующая ссылка из списка
+
 
