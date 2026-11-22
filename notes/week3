@@ -1,1 +1,45 @@
 
+Домашнее задание
+Практика: 50 URL тремя способами + алгоритмы
+
+import httpx
+import asyncio
+
+from pathlib import Path
+from time import perf_counter
+
+def fetch_one(url):
+    try:
+        response = httpx.get(url, timeout=5, follow_redirects=True)
+        return response.is_success
+    except httpx.RequestError:
+        return False
+    
+file_path = Path(__file__).with_name("urls.txt")
+lines = file_path.read_text(encoding="utf-8").splitlines()
+
+success = 0
+failed = 0
+start = perf_counter()
+
+for line in lines: 
+    url = line.strip()
+    if not url: 
+        continue #если строка пустая после .strip(): "" то смело continue 
+
+    result = fetch_one(url)
+    if result: #True
+        success += 1
+    else: #False
+        failed += 1
+#start = perf_counter() это начало показание счетчика
+elapsed = perf_counter() - start  #а тут perf_counter() это показание счетчика который уже идет
+
+print(f"Успешно: {success}")
+print(f"Ошибок: {failed}")
+print(f"Время: {elapsed:.2f} с")
+
+firsturl = "https://jsonplaceholder.typicode.com/posts/1"
+result = fetch_one(firsturl)
+print(result)
+
