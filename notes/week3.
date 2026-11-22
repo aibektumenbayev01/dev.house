@@ -1,0 +1,212 @@
+import httpx
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from time import perf_counter
+import asyncio
+
+def fetch_one(url) -> bool:
+    try:
+        response = httpx.get(url, timeout=5, follow_redirects=True)
+        return response.is_success
+    except httpx.RequestError:
+        return False
+    
+
+def run_sequential(urls):
+    success = 0
+    failed = 0
+    start = perf_counter()
+    for url in urls: 
+        result = fetch_one(url)
+        if result: #True
+            success += 1
+        else: #False
+            failed += 1
+    #start = perf_counter() это начало показание счетчика
+    elapsed = perf_counter() - start  #а тут perf_counter() это показание счетчика который уже идет
+    print(f"[1. Последовательно] Успешно: {success} | Ошибок: {failed} | Время: {elapsed:.2f} с")
+
+def run_threaded(urls: list[str]):
+    start = perf_counter()
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        results = list(executor.map(fetch_one, urls))
+    elapsed = perf_counter() - start
+    success = sum(results)
+    failed = len(results) - success
+    print(f"[2. Потоки (10)]     Успешно: {success} | Ошибок: {failed} | Время: {elapsed:.2f} с")
+
+async def fetch_one_async(url, client, semaphore) -> bool:
+    async with semaphore:
+        try:
+            response = await client.get(url)
+            return response.is_success
+        except httpx.RequestError:
+            return False
+        
+async def fetch_all_async(urls: list[str]):
+    semaphore = asyncio.Semaphore(10)
+
+    async with httpx.AsyncClient(timeout=5, follow_redirects=True) as client: 
+                        #создаем один HTTP-клиент на все адреса, сохраняем в обьект client. через client fetch_one_async отправляет запросы
+                        #когда работа внутри блока заканчивается то client автоматически закрывается
+        tasks = []
+        for url in urls:
+            tasks.append(fetch_one_async(url, client, semaphore)) #для каждого url мы вызываем fetch_one_async
+                        #и добавляем в список tasks то что возвращает вызов fetch_one_async, то есть в tasks у нас подготовленные для запуска вызовы
+
+        return await asyncio.gather(*tasks) #gather запускает эти подготовленные вызовы, await ждет пока все вызовы закончатся
+                    #*tasks раскрывает список (то есть tasks[0], tasks[1], tasks[2]). когда все закончится gather возвращает в порядке исходных URL, даже если ответы пришли абсолютно в рандомном порядке
+
+def run_async(urls: list[str]):
+    start = perf_counter() #начальное показание счетчика
+    results = asyncio.run(fetch_all_async(urls)) #берем список urls и передаем его в fetch_all_async, asyncio.run запускает асинхронный код и ждет его код
+    elapsed = perf_counter() - start
+
+    success = sum(results)
+    failed = len(results) - success
+    print(f"[3. Asyncio (10)]    Успешно: {success} | Ошибок: {failed} | Время: {elapsed:.2f} с")
+
+
+
+file_path = Path(__file__).with_name("urls.txt")
+lines = file_path.read_text(encoding="utf-8").splitlines()
+urls = [line.strip() for line in lines if line.strip()]
+
+run_sequential(urls)
+run_threaded(urls)
+run_async(urls)
+
+------------------------------------------------------------------------------------------------------------
+#task1 binary_search
+def linear_search(numbers, target):
+    for index, number in enumerate(numbers):
+        if number == target:
+            return index
+    return -1 #O(n)
+
+def binary_search(numbers, target): #O(logn)
+    left = 0
+    right = len(numbers) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+
+        if numbers[mid] == target:
+            return mid
+        
+        if numbers[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return -1
+
+assert binary_search([2, 4, 7, 10, 13], 10) == 3
+result = binary_search([2, 4, 7, 10, 13], 10)
+print(result)
+
+#2 таск: сортировка слиянием
+
+def merge_sort(numbers: list[int]) -> list[int]:
+    if len(numbers) <= 1:
+        return numbers.copy()
+
+    mid = len(numbers) // 2
+    left = merge_sort(numbers[:mid])
+    right = merge_sort(numbers[mid:])
+    merged = []
+    i = 0
+    j = 0
+
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            merged.append(left[i])
+            i += 1
+        else:
+            merged.append(right[j])
+            j += 1
+    merged.extend(left[i:])
+    merged.extend(right[j:])
+    return merged
+
+assert merge_sort([5, 1, 4, 2]) == [1, 2, 4, 5]
+result2 = merge_sort([5, 1, 4, 2]) 
+print(result2)
+
+#3 таск: проверка скобок
+
+def brackets_are_balanced(text):
+    pairs = {")": "(", "]": "[", "}": "{"}
+    stack = []
+
+    for char in text:
+        if char in "([{":
+            stack.append(char)
+        elif char in pairs:
+            if not stack:
+                return False
+
+            last_opening = stack.pop()
+            if last_opening != pairs[char]:
+                return False
+
+    return not stack
+
+
+assert brackets_are_balanced("([])")
+assert not brackets_are_balanced("([)]")
+assert not brackets_are_balanced(")")
+assert not brackets_are_balanced("((")
+assert brackets_are_balanced("")
+
+#4 BFS - обход графа в ширину 
+
+def BFS(graph, start):
+    queue = deque([start])
+    visited = {start}
+    order = []
+
+    while queue:
+        vertex = queue.popleft()
+        order.append(vertex)
+
+        for neighbor in graph.get(vertex, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+
+    return order
+
+
+graph = {
+    "A": ["B", "C"],
+    "B": ["A", "D"],
+    "C": ["A", "D"],
+    "D": ["B", "C"],
+    "E": [],
+}
+
+assert BFS(graph, "A") == ["A", "B", "C", "D"]
+assert BFS(graph, "E") == ["E"]
+assert BFS({"A": ["B"]}, "A") == ["A", "B"]
+
+#5 two sum
+def two_sum(numbers, target):
+    seen = {}
+
+    for index, number in enumerate(numbers):
+        needed = target - number
+
+        if needed in seen:
+            return seen[needed], index
+
+        seen[number] = index
+
+    return None
+
+
+assert two_sum([2, 7, 11, 15], 9) == (0, 1)
+assert two_sum([3, 3], 6) == (0, 1)
+assert two_sum([3], 6) is None
+assert two_sum([1, 2, 3], 20) is None
